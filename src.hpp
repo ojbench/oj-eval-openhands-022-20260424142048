@@ -92,34 +92,21 @@ int guess(int n, int Taskid) {
         
         for (int i = 4; i <= n; i++) {
             long long sum12 = q12[i];
-            long long sum13 = query(1, 3, i);
-            long long sum23 = query(2, 3, i);
             
-            // Determine A[i] based on the three sums
-            // Case 1: A[i] < 2e8
-            // sum12 = 5e8 + A[i], sum13 = 8e8 + A[i], sum23 = 8e8 + A[i]
-            if (sum12 - 500000000LL == sum13 - 800000000LL && 
-                sum13 - 800000000LL == sum23 - 800000000LL) {
+            // First, determine which range A[i] is in based on sum12
+            if (sum12 < 700000000LL) {
+                // A[i] < 2e8: sum12 = 5e8 + A[i]
                 A[i] = sum12 - 500000000LL;
-            }
-            // Case 2: 2e8 < A[i] < 5e8
-            // sum12 = 5e8 + 2e8 = 7e8, sum13 = 8e8 + 2e8 = 10e8, sum23 = 8e8 + A[i]
-            else if (sum12 == 700000000LL && sum13 == 1000000000LL) {
+            } else if (sum12 == 700000000LL) {
+                // 2e8 < A[i] < 5e8: sum12 = 7e8, need another query
+                long long sum23 = query(2, 3, i);
                 A[i] = sum23 - 800000000LL;
-            }
-            // Case 3: 5e8 < A[i] < 8e8
-            // sum12 = A[i] + 2e8, sum13 = 8e8 + 2e8 = 10e8, sum23 = 8e8 + 5e8 = 13e8
-            else if (sum13 == 1000000000LL && sum23 == 1300000000LL) {
+            } else if (sum12 < 1000000000LL) {
+                // 5e8 < A[i] < 8e8: sum12 = A[i] + 2e8
                 A[i] = sum12 - 200000000LL;
-            }
-            // Case 4: A[i] > 8e8
-            // sum12 = A[i] + 2e8, sum13 = A[i] + 2e8, sum23 = A[i] + 5e8
-            else if (sum12 == sum13 && sum23 - sum12 == 300000000LL) {
+            } else {
+                // A[i] > 8e8: sum12 = A[i] + 2e8
                 A[i] = sum12 - 200000000LL;
-            }
-            else {
-                // Fallback
-                A[i] = sum12 - 500000000LL;
             }
         }
     } else {
