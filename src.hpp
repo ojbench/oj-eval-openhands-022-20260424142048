@@ -114,10 +114,10 @@ int guess(int n, int Taskid) {
     }
     
     // Calculate result using Horner's method (from n down to 1)
+    // This computes A[1] * 233^1 + A[2] * 233^2 + ... + A[n] * 233^n
     long long result = 0;
     for (int i = n; i >= 1; i--) {
-        result = (result + A[i]) % MOD;
-        if (i > 1) result = (result * BASE) % MOD;
+        result = ((result + A[i]) % MOD * BASE) % MOD;
     }
     
     return (int)result;
